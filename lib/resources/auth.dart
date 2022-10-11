@@ -21,12 +21,12 @@ class AuthMethods {
       if (username.isNotEmpty ||
           email.isNotEmpty ||
           password.isNotEmpty ||
-          bio.isNotEmpty ||
-          pics != null) {
+          bio.isNotEmpty 
+          ) {
         UserCredential credential = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
         String photoUrl = await MediaStorage().uploadImage("profileImage", pics, false);
-        await _firestore.collection("users").doc(credential.user!.uid).set({
+         await _firestore.collection("users").doc(credential.user!.uid).set({
           "username": username,
           "email": email,
           "uid": credential.user!.uid,
@@ -36,6 +36,7 @@ class AuthMethods {
           "following": [],
         });
         res = "success";
+        
       }
     } catch (err) {
       err.toString();

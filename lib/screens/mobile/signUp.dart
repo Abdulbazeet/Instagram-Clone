@@ -18,6 +18,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   Uint8List? chosenImage;
+  bool isLoading = false;
 
   final TextEditingController _bio = TextEditingController();
   final TextEditingController _email = TextEditingController();
@@ -39,6 +40,24 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       chosenImage = image;
     });
+  }
+
+  void signUpUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    String res = await AuthMethods().signUpUser(
+        username: _username.text,
+        email: _email.text,
+        password: _password.text,
+        bio: _bio.text,
+        pics: chosenImage!);
+    setState(() {
+      isLoading = false;
+    });
+    if (res != "success") {
+      showSnackBar("Invalid sign up", context);
+    }
   }
 
   @override
@@ -63,15 +82,16 @@ class _SignUpState extends State<SignUp> {
               ),
               Stack(
                 children: [
-                  chosenImage!=null? CircleAvatar(
-                    radius: 64,
-                    backgroundImage: MemoryImage(chosenImage!),
-                  ):
-                  const CircleAvatar(
-                    radius: 64,
-                    backgroundImage: NetworkImage(
-                        'https://st.depositphotos.com/2218212/2938/i/450/depositphotos_29387653-stock-photo-facebook-profile.jpg'),
-                  ),
+                  chosenImage != null
+                      ? CircleAvatar(
+                          radius: 64,
+                          backgroundImage: MemoryImage(chosenImage!),
+                        )
+                      : const CircleAvatar(
+                          radius: 64,
+                          backgroundImage: NetworkImage(
+                              'https://st.depositphotos.com/2218212/2938/i/450/depositphotos_29387653-stock-photo-facebook-profile.jpg'),
+                        ),
                   Positioned(
                       bottom: -10,
                       right: 0,
@@ -115,22 +135,16 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(
                 height: 24,
               ),
-              GestureDetector(
-                onTap: () => AuthMethods().signUpUser(
-                    username: _username.text,
-                    email: _email.text,
-                    password: _password.text,
-                    bio: _bio.text,
-                    pics: chosenImage!
-                    )
-                     ,
-
+              InkWell(
+                onTap: signUpUser,
                 child: Container(
                   width: double.infinity,
                   height: 49,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6), color: blueColor),
-                  child: const Center(
+                  child: isLoading?const Center(child: CircularProgressIndicator(
+                     
+                    color: primaryColor)):const Center(
                     child: Text(
                       'Sign up',
                       style: TextStyle(fontSize: 16),
