@@ -17,11 +17,12 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final TextEditingController _username = TextEditingController();
+  Uint8List? chosenImage;
+
+  final TextEditingController _bio = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  final TextEditingController _bio = TextEditingController();
-  Uint8List? chosenImage;
+  final TextEditingController _username = TextEditingController();
 
   @override
   void dispose() {
@@ -75,7 +76,7 @@ class _SignUpState extends State<SignUp> {
                       bottom: -10,
                       right: 0,
                       child: IconButton(
-                          onPressed: () => selectImage,
+                          onPressed: selectImage,
                           icon: Icon(Icons.add_a_photo)))
                 ],
               ),
@@ -119,7 +120,11 @@ class _SignUpState extends State<SignUp> {
                     username: _username.text,
                     email: _email.text,
                     password: _password.text,
-                    bio: _bio.text),
+                    bio: _bio.text,
+                    pics: chosenImage!
+                    )
+                     ,
+
                 child: Container(
                   width: double.infinity,
                   height: 49,
