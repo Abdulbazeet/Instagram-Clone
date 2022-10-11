@@ -4,7 +4,8 @@ import 'package:instagramclone/const/colors.dart';
 import 'package:instagramclone/layout/Responsive_screen.dart';
 import 'package:instagramclone/screens/mobile/mobile_screen.dart';
 import 'package:instagramclone/screens/mobile/login.dart';
-import 'package:instagramclone/screens/web/web_screen.dart';
+import 'package:instagramclone/screens/mobile/login.dart';
+import 'package:instagramclone/screens/mobile/signUp.dart';
 
 void main() async {
   WidgetsFlutterBinding();
@@ -23,11 +24,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData.dark()
           .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
-      // home:const  Login(),
-      home: const ResponsiveScreen(
-        mobileScreenSize: MobileScreenSize(),
-        webScreenSize: WebScreenSize(),
-      ),
+       home:const  SignUp(),
+      // home: const ResponsiveScreen(
+      //   mobileScreenSize: MobileScreenSize(),
+      //   webScreenSize: WebScreenSize(),
+      // ),
     );
   }
 }
