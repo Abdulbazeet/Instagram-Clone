@@ -41,6 +41,7 @@ dependencies:
   firebase_core: ^1.24.0
   firebase_storage: ^10.3.11
   flutter_svg: ^1.1.5
+  image_picker: ^0.8.6
 
 
 
