@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as model;
 import 'package:flutter/services.dart';
+import 'package:instagramclone/models/users.dart';
+import 'package:instagramclone/models/users.dart';
+import 'package:instagramclone/models/users.dart';
 import 'package:instagramclone/resources/storage.dart';
+
+import '../models/users.dart';
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -27,18 +32,20 @@ class AuthMethods {
             email: email, password: password);
         String photoUrl =
             await MediaStorage().uploadImage("profileImage", pics, false);
-        await _firestore.collection("users").doc(credential.user!.uid).set({
-          "username": username,
-          "email": email,
-          "uid": credential.user!.uid,
-          "bio": bio,
-          "password": password,
-          "pics": photoUrl,
-          "followers": [],
-          "following": [],
-        });
+        Users users = Users(
+            email: email,
+            bio: bio,
+            followers: [],
+            following: [],
+            password: password,
+            photoUrl: photoUrl,
+            uid: credential.user!.uid,
+            username: username);
+        await _firestore
+            .collection("users")
+            .doc(credential.user!.uid)
+            .set(users.toJson());
         res = "success";
-        
       }
     } catch (err) {
       err.toString();
@@ -55,7 +62,7 @@ class AuthMethods {
             email: email, password: password);
 
         res = "success";
-      }else{
+      } else {
         res = "Enter all fields";
       }
     } catch (e) {
