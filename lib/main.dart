@@ -2,11 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramclone/const/colors.dart';
+import 'package:get/get.dart';
 import 'package:instagramclone/layout/Responsive_screen.dart';
 import 'package:instagramclone/screens/mobile/mobile_screen.dart';
 import 'package:instagramclone/screens/mobile/login.dart';
-import 'package:instagramclone/screens/mobile/login.dart';
-import 'package:instagramclone/screens/mobile/signUp.dart';
 import 'package:instagramclone/screens/web/web_screen.dart';
 void main() async {
   
@@ -21,7 +20,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData.dark()
@@ -37,10 +37,9 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             if (snapshot.hasData) {
-              return const ResponsiveScreen(
-                mobileScreenSize: MobileScreenSize(),
-                webScreenSize: WebScreenSize(),
-              );
+              print(Get.height.toString());
+              print(MediaQuery.of(context).size.width.toString());
+              return  const MobileScreenSize();
             } else if (snapshot.hasError) {
               return Center(
                 child: Text("${snapshot.error}"),
@@ -48,7 +47,9 @@ class MyApp extends StatelessWidget {
             }
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
+            print(Get.height.toString());
             return const Center(
+              
               child: CircularProgressIndicator(
                 color: primaryColor,
               ),
