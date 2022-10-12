@@ -3,10 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramclone/const/colors.dart';
 import 'package:get/get.dart';
-import 'package:instagramclone/layout/Responsive_screen.dart';
+
 import 'package:instagramclone/screens/mobile/mobile_screen.dart';
 import 'package:instagramclone/screens/mobile/login.dart';
-import 'package:instagramclone/screens/web/web_screen.dart';
+
 void main() async {
   
   WidgetsFlutterBinding();
