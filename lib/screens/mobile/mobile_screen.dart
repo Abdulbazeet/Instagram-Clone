@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:instagramclone/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
-class MobileScreenSize extends StatelessWidget {
+import '../../models/users.dart';
+
+class MobileScreenSize extends StatefulWidget {
   const MobileScreenSize({super.key});
 
   @override
+  State<MobileScreenSize> createState() => _MobileScreenSizeState();
+}
+
+class _MobileScreenSizeState extends State<MobileScreenSize> {
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    Users users = Provider.of<UserProvider>(context).getUser;
+    return  Scaffold(
       body: Center(
-        child: Text('MobileView'),
+        child: Text(users.username),
       ),
     );
   }

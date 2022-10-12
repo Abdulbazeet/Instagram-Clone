@@ -43,6 +43,8 @@ dependencies:
   flutter_svg: ^1.1.5
   image_picker: ^0.8.6
   get: ^4.6.5
+  provider: ^6.0.4
+
 
 
 

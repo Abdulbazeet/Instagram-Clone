@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:instagramclone/resources/auth.dart';
 import 'package:instagramclone/resources/utils.dart';
+import 'package:instagramclone/screens/mobile/signUp.dart';
 import 'package:instagramclone/widgest/text_field_input.dart';
 
 import '../../const/colors.dart';
@@ -38,6 +39,11 @@ class _LoginState extends State<Login> {
     if (res != "success") {
       showSnackBar("An error occured", context);
     }
+  }
+
+  void navigateToSignUp() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => SignUp()));
   }
 
   @override
@@ -78,18 +84,23 @@ class _LoginState extends State<Login> {
               ),
               InkWell(
                 onTap: logInUser,
-                child: isLoading?const Center(child: CircularProgressIndicator(color: primaryColor),): Container(
-                  width: double.infinity,
-                  height: 49,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6), color: blueColor),
-                  child: const Center(
-                    child: Text(
-                      'Log in',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ),
+                child: isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(color: primaryColor),
+                      )
+                    : Container(
+                        width: double.infinity,
+                        height: 49,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: blueColor),
+                        child: const Center(
+                          child: Text(
+                            'Log in',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
               ),
               Flexible(
                 child: Container(),
@@ -99,7 +110,7 @@ class _LoginState extends State<Login> {
                 text: TextSpan(text: "Dont't have an account? ", children: [
                   TextSpan(
                       recognizer: TapGestureRecognizer()
-                        ..onTap = (() => print("Log in")),
+                        ..onTap = navigateToSignUp,
                       text: " Sign up",
                       style: const TextStyle(fontWeight: FontWeight.bold))
                 ]),
