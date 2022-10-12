@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:instagramclone/resources/auth.dart';
 import 'package:instagramclone/resources/utils.dart';
 import 'package:instagramclone/screens/mobile/login.dart';
+import 'package:instagramclone/screens/mobile/mobile_screen.dart';
 
 import '../../const/colors.dart';
 import '../../widgest/text_field_input.dart';
@@ -59,9 +60,14 @@ class _SignUpState extends State<SignUp> {
     if (res != "success") {
       showSnackBar("Invalid sign up", context);
     }
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => MobileScreenSize(),
+    ));
   }
-  void navigateToLogIn(){
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Login()));
+
+  void navigateToLogIn() {
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => Login()));
   }
 
   @override
@@ -146,14 +152,15 @@ class _SignUpState extends State<SignUp> {
                   height: 49,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6), color: blueColor),
-                  child: isLoading?const Center(child: CircularProgressIndicator(
-                     
-                    color: primaryColor)):const Center(
-                    child: Text(
-                      'Sign up',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
+                  child: isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(color: primaryColor))
+                      : const Center(
+                          child: Text(
+                            'Sign up',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
                 ),
               ),
               Flexible(

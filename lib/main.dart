@@ -24,19 +24,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    addData();
-  }
-
-  addData() async {
-    UserProvider _userProvider = Provider.of(context,listen: false);
-    await _userProvider.refreshUser();
-  }
-  // This widget is the root of your application.
+ // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

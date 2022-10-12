@@ -12,6 +12,17 @@ class MobileScreenSize extends StatefulWidget {
 }
 
 class _MobileScreenSizeState extends State<MobileScreenSize> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    addData();
+  }
+  addData() async {
+    UserProvider _userProvider = Provider.of(context, listen: false);
+    await _userProvider.refreshUser();
+  }
   @override
   Widget build(BuildContext context) {
     Users users = Provider.of<UserProvider>(context).getUser;

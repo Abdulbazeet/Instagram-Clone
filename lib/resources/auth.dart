@@ -12,6 +12,7 @@ import '../models/users.dart';
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
   Future<Users> getUserDetails() async {
     User currentUser = _auth.currentUser!;
     DocumentSnapshot snapshot =
