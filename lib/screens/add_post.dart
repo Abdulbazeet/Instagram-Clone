@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:instagramclone/const/colors.dart';
 import 'package:instagramclone/models/users.dart';
 import 'package:instagramclone/provider/user_provider.dart';
+import 'package:instagramclone/resources/firestore_method.dart';
 import 'package:instagramclone/resources/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,7 @@ class AddPostPage extends StatefulWidget {
 
 class _AddPostPageState extends State<AddPostPage> {
   Uint8List? file;
+  bool isLoading = false;
   final TextEditingController _descriptionController = TextEditingController();
   _createUploadDialog(BuildContext context) async {
     return showDialog(
@@ -54,9 +56,25 @@ class _AddPostPageState extends State<AddPostPage> {
         });
   }
 
+  void post(String username, String profielImage, String uid) async {
+    try {
+      String res = await FirestoreMethod().uploadPosts(
+          uid, _descriptionController.text, username, profielImage, file!);
+      if (res == "success") {
+        showSnackBar("Succesful", context);
+        setState(() {
+          isLoading = true;
+        });
+      } else {
+        showSnackBar("Not successful", context);
+        setState(() {});
+      }
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
-      Users users = Provider.of<UserProvider>(context).getUser; 
+    Users users = Provider.of<UserProvider>(context).getUser;
 
     return file == null
         ? Center(
@@ -75,7 +93,7 @@ class _AddPostPageState extends State<AddPostPage> {
               leading: const Icon(Icons.arrow_back_ios),
               actions: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () => post(users.username, users.photoUrl, users.uid),
                   child: const Text(
                     "POST",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
@@ -83,15 +101,14 @@ class _AddPostPageState extends State<AddPostPage> {
                 ),
               ],
             ),
-            body: Column(
+            body: isLoading?LinearProgressIndicator(): Column(
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                     CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          users.photoUrl),
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(users.photoUrl),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * .45,
@@ -107,7 +124,7 @@ class _AddPostPageState extends State<AddPostPage> {
                       child: AspectRatio(
                         aspectRatio: 487 / 251,
                         child: Container(
-                          decoration:  BoxDecoration(
+                          decoration: BoxDecoration(
                             image: DecorationImage(
                               image: MemoryImage(file!),
                               fit: BoxFit.fill,
