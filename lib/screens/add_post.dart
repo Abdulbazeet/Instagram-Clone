@@ -48,28 +48,43 @@ class _AddPostPageState extends State<AddPostPage> {
                   });
                 },
               ),
-              const SimpleDialogOption(
-                padding: EdgeInsets.all(20),
-              )
+              SimpleDialogOption(
+                  padding: EdgeInsets.all(20),
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
             ],
           );
         });
   }
 
   void post(String username, String profielImage, String uid) async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       String res = await FirestoreMethod().uploadPosts(
           uid, _descriptionController.text, username, profielImage, file!);
       if (res == "success") {
-        showSnackBar("Succesful", context);
         setState(() {
-          isLoading = true;
+          isLoading = false;
         });
-      } else {
-        showSnackBar("Not successful", context);
-        setState(() {});
+        showSnackBar("Succesful", context);
+        clearImage;
       }
-    } catch (e) {}
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      showSnackBar(e.toString(), context);
+    }
+  }
+
+  void clearImage() {
+    setState(() {
+      file = null;
+    });
   }
 
   @override
@@ -90,10 +105,12 @@ class _AddPostPageState extends State<AddPostPage> {
               ),
               backgroundColor: mobileBackgroundColor,
               centerTitle: false,
-              leading: const Icon(Icons.arrow_back_ios),
+              leading: IconButton(
+                  icon: Icon(Icons.arrow_back_ios), onPressed: clearImage),
               actions: [
                 TextButton(
-                  onPressed: () => post(users.username, users.photoUrl, users.uid),
+                  onPressed: () =>
+                      post(users.username, users.photoUrl, users.uid),
                   child: const Text(
                     "POST",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
@@ -101,43 +118,45 @@ class _AddPostPageState extends State<AddPostPage> {
                 ),
               ],
             ),
-            body: isLoading?LinearProgressIndicator(): Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(users.photoUrl),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .45,
-                      child: const TextField(
-                        decoration: InputDecoration(
-                            hintText: "Write a caption...",
-                            border: InputBorder.none),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 45,
-                      width: 45,
-                      child: AspectRatio(
-                        aspectRatio: 487 / 251,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: MemoryImage(file!),
-                              fit: BoxFit.fill,
-                              alignment: FractionalOffset.topCenter,
+            body: isLoading == true
+                ? LinearProgressIndicator()
+                : Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(users.photoUrl),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .45,
+                            child: const TextField(
+                              decoration: InputDecoration(
+                                  hintText: "Write a caption...",
+                                  border: InputBorder.none),
                             ),
                           ),
-                        ),
+                          SizedBox(
+                            height: 45,
+                            width: 45,
+                            child: AspectRatio(
+                              aspectRatio: 487 / 251,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: MemoryImage(file!),
+                                    fit: BoxFit.fill,
+                                    alignment: FractionalOffset.topCenter,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                    ],
+                  ),
           );
   }
 }
