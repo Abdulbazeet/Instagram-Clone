@@ -49,8 +49,8 @@ class _AddPostPageState extends State<AddPostPage> {
                 },
               ),
               SimpleDialogOption(
-                  padding: EdgeInsets.all(20),
-                  child: Text("Cancel"),
+                  padding: const EdgeInsets.all(20),
+                  child: const Text("Cancel"),
                   onPressed: () {
                     Navigator.of(context).pop();
                   })
@@ -69,6 +69,7 @@ class _AddPostPageState extends State<AddPostPage> {
       if (res == "success") {
         setState(() {
           isLoading = false;
+          clearImage();
         });
         showSnackBar("Succesful", context);
         clearImage;
@@ -106,7 +107,7 @@ class _AddPostPageState extends State<AddPostPage> {
               backgroundColor: mobileBackgroundColor,
               centerTitle: false,
               leading: IconButton(
-                  icon: Icon(Icons.arrow_back_ios), onPressed: clearImage),
+                  icon: const Icon(Icons.arrow_back_ios), onPressed: clearImage),
               actions: [
                 TextButton(
                   onPressed: () =>
@@ -119,7 +120,7 @@ class _AddPostPageState extends State<AddPostPage> {
               ],
             ),
             body: isLoading == true
-                ? LinearProgressIndicator()
+                ? const LinearProgressIndicator()
                 : Column(
                     children: [
                       Row(
@@ -131,8 +132,9 @@ class _AddPostPageState extends State<AddPostPage> {
                           ),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * .45,
-                            child: const TextField(
-                              decoration: InputDecoration(
+                            child:  TextField(
+                              controller: _descriptionController,
+                              decoration: const InputDecoration(
                                   hintText: "Write a caption...",
                                   border: InputBorder.none),
                             ),
