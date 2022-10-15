@@ -1,15 +1,31 @@
+// ignore_for_file: dead_code
+
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:instagramclone/const/colors.dart';
+import 'package:instagramclone/provider/user_provider.dart';
+import 'package:instagramclone/widgest/like_animation.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class MainCard extends StatelessWidget {
+import '../models/users.dart';
+
+class MainCard extends StatefulWidget {
   final snap;
   const MainCard({super.key, required this.snap});
 
   @override
+  State<MainCard> createState() => _MainCardState();
+  
+}
+
+class _MainCardState extends State<MainCard> {
+      bool isIconAnimating = false;
+
+  @override
   Widget build(BuildContext context) {
+    final Users users = Provider.of<UserProvider>(context).getUser;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       color: mobileBackgroundColor,
@@ -21,13 +37,13 @@ class MainCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 16,
-                  backgroundImage: NetworkImage(snap['photo']),
+                  backgroundImage: NetworkImage(widget.snap['photo']),
                 ),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(left: 8),
                     child: Text(
-                      snap['username'],
+                      widget.snap['username'],
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -65,21 +81,58 @@ class MainCard extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * .35,
-            width: double.infinity,
-            child: Image.network(
-              snap['postUrl'],
-              fit: BoxFit.cover,
+          GestureDetector(
+            onDoubleTap: () {
+              // print("object");
+              setState(() {
+                isIconAnimating = true;
+              });
+              
+            },
+            
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .35,
+                  width: double.infinity,
+                  child: Image.network(
+                    widget.snap['postUrl'].toString(),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                AnimatedOpacity(
+                  opacity: isIconAnimating ? 1 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: LikeAnimation(
+                    childView: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 120,
+                    ),
+                    isAnimating: isIconAnimating,
+                    duration: const Duration(milliseconds: 400),
+                    onEnd: () {
+                      setState(() {
+                        isIconAnimating = false;
+                      });
+                    },
+                  ),
+                )
+              ],
             ),
           ),
           Row(
             children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.favorite_outlined,
-                  color: Colors.red,
+              LikeAnimation(
+                isAnimating: widget.snap['likes'].contains(users.uid),
+                smallLike: true,
+                childView: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.favorite_outlined,
+                    color: Colors.red,
+                  ),
                 ),
               ),
               IconButton(
@@ -113,7 +166,7 @@ class MainCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${snap['likes'].length} likes",
+                  "${widget.snap['likes'].length} likes",
                   style: Theme.of(context).textTheme.bodyText2,
                 ),
                 Container(
@@ -121,11 +174,11 @@ class MainCard extends StatelessWidget {
                   width: double.infinity,
                   child: RichText(
                     text: TextSpan(
-                      text: snap['username'],
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      text: widget.snap['username'],
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                       children: [
                         TextSpan(
-                            text: ' ${snap['description']}',
+                            text: '   ${widget.snap['description']}',
                             style:
                                 const TextStyle(fontWeight: FontWeight.normal))
                       ],
@@ -146,7 +199,7 @@ class MainCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(
                     DateFormat.yMMMd().format(
-                      snap['time'].toDate(),
+                      widget.snap['time'].toDate(),
                     ),
                     style: const TextStyle(color: secondaryColor, fontSize: 16),
                   ),
