@@ -29,6 +29,7 @@ class Post {
         "photo": photo,
         "time": time,
         "postUrl": postUrl,
+        'postId': postId
       };
 
   static Post fromSnap(DocumentSnapshot snap) {

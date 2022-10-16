@@ -16,6 +16,7 @@ class AddPostPage extends StatefulWidget {
 }
 
 class _AddPostPageState extends State<AddPostPage> {
+  
   Uint8List? file;
   bool isLoading = false;
   final TextEditingController _descriptionController = TextEditingController();
@@ -65,7 +66,7 @@ class _AddPostPageState extends State<AddPostPage> {
     });
     try {
       String res = await FirestoreMethod().uploadPosts(
-          uid, _descriptionController.text, username, profielImage, file!);
+          uid, _descriptionController.text, username, profielImage,file!);
       if (res == "success") {
         setState(() {
           isLoading = false;

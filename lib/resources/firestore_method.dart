@@ -19,7 +19,7 @@ class FirestoreMethod {
     try {
       String downloadUrl =
           await MediaStorage().uploadImage("posts", file, true);
-      String postUid = const Uuid().v1();
+      String postId = const Uuid().v1();
 
       Post post = Post(
           username: username,
@@ -28,14 +28,28 @@ class FirestoreMethod {
           postUrl: downloadUrl,
           likes: [],
           photo: profileImage,
-          postId: postUid,
+          postId: postId,
           time: DateTime.now());
-      _firestore.collection('posts').doc(postUid).set(post.toJson());
+      _firestore.collection('posts').doc(postId).set(post.toJson());
 
       res = "success";
     } catch (e) {
       res = e.toString();
     }
     return res;
+  }
+
+  Future<void> likePost(String postId, String uid, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        _firestore.collection('posts').doc('postId').update({
+          'likes': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        _firestore.collection('posts').doc('postId').update({
+          'likes': FieldValue.arrayUnion([uid])
+        });
+      }
+    } catch (e) {}
   }
 }

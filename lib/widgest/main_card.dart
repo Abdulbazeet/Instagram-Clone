@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:instagramclone/const/colors.dart';
 import 'package:instagramclone/provider/user_provider.dart';
+import 'package:instagramclone/resources/firestore_method.dart';
 import 'package:instagramclone/widgest/like_animation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -17,11 +18,10 @@ class MainCard extends StatefulWidget {
 
   @override
   State<MainCard> createState() => _MainCardState();
-  
 }
 
 class _MainCardState extends State<MainCard> {
-      bool isIconAnimating = false;
+  bool isIconAnimating = false;
 
   @override
   Widget build(BuildContext context) {
@@ -82,14 +82,26 @@ class _MainCardState extends State<MainCard> {
             ),
           ),
           GestureDetector(
-            onDoubleTap: () {
-              // print("object");
+            onDoubleTap: () async {
+              print("object");
+              await FirestoreMethod().likePost(
+                  widget.snap['postId'], users.uid, widget.snap['likes']);
               setState(() {
                 isIconAnimating = true;
               });
-              
+
+              await FirestoreMethod().likePost(
+                  widget.snap['postId'], users.uid, widget.snap['likes']);
             },
-            
+            onTap: () async{
+              await FirestoreMethod().likePost(
+                  widget.snap['postId'], users.uid, widget.snap['likes']);
+              setState(() {
+                isIconAnimating = true;
+              });
+             await FirestoreMethod().likePost(
+                  widget.snap['postId'], users.uid, widget.snap['likes']);
+            },
             child: Stack(
               alignment: Alignment.center,
               children: [
