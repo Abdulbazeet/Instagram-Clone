@@ -2,10 +2,12 @@
 
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramclone/const/colors.dart';
 import 'package:instagramclone/provider/user_provider.dart';
 import 'package:instagramclone/resources/firestore_method.dart';
+import 'package:instagramclone/screens/comment_screen.dart';
 import 'package:instagramclone/widgest/like_animation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -22,10 +24,35 @@ class MainCard extends StatefulWidget {
 
 class _MainCardState extends State<MainCard> {
   bool isIconAnimating = false;
+  int commentLength = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCommments;
+  }
+
+  void getCommments() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+
+      commentLength = snap.docs.length;
+    } catch (e) {
+      print(e.toString());
+    }
+    setState(() {
+      
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final Users users = Provider.of<UserProvider>(context).getUser;
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       color: mobileBackgroundColor,
@@ -41,10 +68,10 @@ class _MainCardState extends State<MainCard> {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.only(left: 8),
                     child: Text(
                       widget.snap['username'],
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -58,20 +85,27 @@ class _MainCardState extends State<MainCard> {
                                     const EdgeInsets.symmetric(vertical: 16),
                                 shrinkWrap: true,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
+                                  Column(
+                                    
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: const [
-                                        Text(
-                                          "Delete",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
+                                      children:  [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: InkWell(
+                                            onTap: () async{
+                                              await FirestoreMethod().deletePost(widget.snap['postId']);
+                                            },
+                                            child: const Text(
+                                              "Delete",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
                                         )
                                       ],
                                     ),
-                                  )
+                                  
                                 ],
                               ),
                             )),
@@ -89,19 +123,14 @@ class _MainCardState extends State<MainCard> {
               setState(() {
                 isIconAnimating = true;
               });
-
-              await FirestoreMethod().likePost(
-                  widget.snap['postId'], users.uid, widget.snap['likes']);
             },
-            onTap: () async{
-              await FirestoreMethod().likePost(
-                  widget.snap['postId'], users.uid, widget.snap['likes']);
-              setState(() {
-                isIconAnimating = true;
-              });
-             await FirestoreMethod().likePost(
-                  widget.snap['postId'], users.uid, widget.snap['likes']);
-            },
+            // onTap: () async {
+            //   await FirestoreMethod().likePost(
+            //       widget.snap['postId'], users.uid, widget.snap['likes']);
+            //   setState(() {
+            //     isIconAnimating = true;
+            //   });
+            // },
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -140,15 +169,31 @@ class _MainCardState extends State<MainCard> {
                 isAnimating: widget.snap['likes'].contains(users.uid),
                 smallLike: true,
                 childView: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.favorite_outlined,
-                    color: Colors.red,
-                  ),
+                  onPressed: () async {
+                    await FirestoreMethod().likePost(
+                        widget.snap['postId'], users.uid, widget.snap['likes']);
+                  },
+                  icon: widget.snap['likes'].contains(users.uid)
+                      ? const Icon(
+                          Icons.favorite_outlined,
+                          color: Colors.red,
+                        )
+                      : const Icon(
+                          Icons.favorite_outline,
+                          color: Colors.white,
+                        ),
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CommentScreen(
+                        snap: widget.snap,
+                      ),
+                    ),
+                  );
+                },
                 icon: const Icon(
                   Icons.message_outlined,
                   color: Colors.white,
@@ -201,9 +246,9 @@ class _MainCardState extends State<MainCard> {
                   onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: const Text(
-                      "View all 143 comments",
-                      style: TextStyle(color: secondaryColor, fontSize: 16),
+                    child:  Text(
+                      'View all $commentLength comments',
+                      style: const TextStyle(color: secondaryColor, fontSize: 16),
                     ),
                   ),
                 ),
