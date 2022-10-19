@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:instagramclone/const/colors.dart';
+import 'package:instagramclone/screens/profile.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -25,22 +26,27 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
-        title: TextFormField(
-          controller: searchController,
-          onFieldSubmitted: (String now) {
-            setState(() {
-              isShowUser = true;
-            });
-          },
-          decoration: const InputDecoration(
-              hintText: 'Search for users', border: InputBorder.none),
+        title: Form(
+          child: TextFormField(
+            controller: searchController,
+            onFieldSubmitted: (String _) {
+              setState(() {
+                isShowUser = true;
+              });
+            },
+            decoration: const InputDecoration(
+                labelText: 'Search for users', border: InputBorder.none),
+          ),
         ),
       ),
       body: isShowUser
           ? FutureBuilder(
               future: FirebaseFirestore.instance
                   .collection('users')
-                  .where('username', isGreaterThanOrEqualTo: searchController)
+                  .where(
+                    'username',
+                    isLessThanOrEqualTo: searchController.text,
+                  )
                   .get(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
@@ -49,15 +55,22 @@ class _SearchScreenState extends State<SearchScreen> {
                   );
                 }
                 return ListView.builder(
-                  // itemCount: snapshot.data!.docs.length,
+                  itemCount: (snapshot.data! as dynamic).docs.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            (snapshot.data! as dynamic).docs[index]['pics']),
+                    return InkWell(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProfileScreen(
+                            uid: (snapshot.data! as dynamic).docs[index]
+                                ['uid']),
+                      )),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              (snapshot.data! as dynamic).docs[index]['pics']),
+                        ),
+                        title: Text((snapshot.data! as dynamic).docs[index]
+                            ['username']),
                       ),
-                      title: Text(
-                          (snapshot.data! as dynamic).docs[index]['username']),
                     );
                   },
                 );
@@ -71,9 +84,29 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: CircularProgressIndicator(),
                   );
                 }
-                return StaggeredGridView.countBuilder(
+                return 
+                
+                // GridView.custom(
+                //   gridDelegate: SliverQuiltedGridDelegate(
+                //     crossAxisCount: 4,
+                //     mainAxisSpacing: 4,
+                //     crossAxisSpacing: 4,
+                //     repeatPattern: QuiltedGridRepeatPattern.inverted,
+                //     pattern: [
+                //       QuiltedGridTile(2, 2),
+                //       QuiltedGridTile(1, 1),
+                //       QuiltedGridTile(1, 1),
+                //       QuiltedGridTile(1, 2),
+                //     ],
+                //   ),
+                //   childrenDelegate: SliverChildBuilderDelegate(
+                //     (context, index) => Tile(index: index),
+                //   ),
+                // );
+                
+                StaggeredGridView.countBuilder(
                   crossAxisCount: 3,
-                  itemCount: snapshot.data!.docs.length,
+                  itemCount: (snapshot.data! as dynamic).docs.length,
                   itemBuilder: (context, index) =>
                       Image.network(snapshot.data!.docs[index]['postUrl']),
                   staggeredTileBuilder: (int index) => StaggeredTile.count(
@@ -81,7 +114,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     index % 7 == 0 ? 2 : 1,
                   ),
                   mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
+                  crossAxisSpacing: 2.5,
                 );
               },
             ),

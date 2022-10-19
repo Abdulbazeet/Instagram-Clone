@@ -18,5 +18,5 @@ List<Widget> homescreen = [
   ),
 ];
 
-// double width = Get.height;
+// double width = Get.height;ku
 
