@@ -8,6 +8,8 @@ import 'package:instagramclone/resources/utils.dart';
 import 'package:instagramclone/screens/homeScreen.dart';
 import 'package:instagramclone/widgest/button.dart';
 
+import '../main.dart';
+
 class ProfileScreen extends StatefulWidget {
   final String uid;
   const ProfileScreen({super.key, required this.uid});
@@ -114,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   .pushReplacement(
                                                       MaterialPageRoute(
                                                 builder: (context) =>
-                                                   const HomeScreen(),
+                                                   const MyApp(),
                                               ));
                                             },
                                             backgroundColor:
