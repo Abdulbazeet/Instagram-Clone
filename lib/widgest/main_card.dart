@@ -41,12 +41,11 @@ class _MainCardState extends State<MainCard> {
           .get();
 
       commentLength = snap.docs.length;
+       
     } catch (e) {
       print(e.toString());
     }
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override
@@ -86,26 +85,25 @@ class _MainCardState extends State<MainCard> {
                                 shrinkWrap: true,
                                 children: [
                                   Column(
-                                    
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children:  [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: InkWell(
-                                            onTap: () async{
-                                              await FirestoreMethod().deletePost(widget.snap['postId']);
-                                            },
-                                            child: const Text(
-                                              "Delete",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            await FirestoreMethod().deletePost(
+                                                widget.snap['postId']);
+                                          },
+                                          child: const Text(
+                                            "Delete",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
                             )),
@@ -246,9 +244,10 @@ class _MainCardState extends State<MainCard> {
                   onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child:  Text(
+                    child: Text(
                       'View all $commentLength comments',
-                      style: const TextStyle(color: secondaryColor, fontSize: 16),
+                      style:
+                          const TextStyle(color: secondaryColor, fontSize: 16),
                     ),
                   ),
                 ),

@@ -20,6 +20,12 @@ class _AddPostPageState extends State<AddPostPage> {
   Uint8List? file;
   bool isLoading = false;
   final TextEditingController _descriptionController = TextEditingController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _descriptionController.dispose();
+  }
   _createUploadDialog(BuildContext context) async {
     return showDialog(
         context: context,
