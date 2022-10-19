@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:instagramclone/const/colors.dart';
+import 'package:instagramclone/resources/auth.dart';
 import 'package:instagramclone/resources/firestore_method.dart';
 import 'package:instagramclone/resources/utils.dart';
+import 'package:instagramclone/screens/homeScreen.dart';
 import 'package:instagramclone/widgest/button.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -106,12 +108,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     FirebaseAuth.instance.currentUser!.uid ==
                                             widget.uid
                                         ? FollowButtonWidget(
-                                            function: () {},
+                                            function: () async {
+                                              await AuthMethods().signOut();
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                builder: (context) =>
+                                                   const HomeScreen(),
+                                              ));
+                                            },
                                             backgroundColor:
                                                 mobileBackgroundColor,
                                             textColor: primaryColor,
                                             borderColor: Colors.grey,
-                                            text: "Edit profile ")
+                                            text: "Sign Out ")
                                         : isFollowing
                                             ? FollowButtonWidget(
                                                 function: () async {
@@ -120,6 +130,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                           FirebaseAuth.instance
                                                               .currentUser!.uid,
                                                           userdata['uid']);
+                                                  setState(() {
+                                                    isFollowing = false;
+                                                    followers--;
+                                                  });
                                                 },
                                                 backgroundColor: Colors.white,
                                                 textColor: Colors.black,
@@ -132,6 +146,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                           FirebaseAuth.instance
                                                               .currentUser!.uid,
                                                           userdata['uid']);
+                                                  setState(() {
+                                                    isFollowing = true;
+                                                    followers++;
+                                                  });
                                                 },
                                                 backgroundColor: Colors.blue,
                                                 textColor: Colors.white,
