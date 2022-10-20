@@ -241,7 +241,9 @@ class _MainCardState extends State<MainCard> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    // Navigator.of(context).push(MaterialPageRoute(builder: (context) => CommentScreen(),))
+                  },
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Text(

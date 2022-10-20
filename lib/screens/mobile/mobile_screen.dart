@@ -18,6 +18,7 @@ class MobileScreenSize extends StatefulWidget {
 class _MobileScreenSizeState extends State<MobileScreenSize> {
   int _page = 0;
   late PageController pageController;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -51,7 +52,7 @@ class _MobileScreenSizeState extends State<MobileScreenSize> {
   @override
   Widget build(BuildContext context) {
     // Users users = Provider.of<UserProvider>(context).getUser;
-    return Scaffold(
+    return isLoading? const Center(child: CircularProgressIndicator(),): Scaffold(
       body: PageView(
           controller: pageController,
           onPageChanged: onPageChange,

@@ -88,19 +88,21 @@ class _SearchScreenState extends State<SearchScreen> {
                 
                 // GridView.custom(
                 //   gridDelegate: SliverQuiltedGridDelegate(
-                //     crossAxisCount: 4,
-                //     mainAxisSpacing: 4,
-                //     crossAxisSpacing: 4,
+                //     crossAxisCount: 3,
+                //     mainAxisSpacing: 8,
+                //     crossAxisSpacing: 8,
                 //     repeatPattern: QuiltedGridRepeatPattern.inverted,
                 //     pattern: [
-                //       QuiltedGridTile(2, 2),
-                //       QuiltedGridTile(1, 1),
-                //       QuiltedGridTile(1, 1),
-                //       QuiltedGridTile(1, 2),
+                //       const QuiltedGridTile(2, 2),
+                //       const QuiltedGridTile(1, 1),
+                //       const QuiltedGridTile(1, 1),
+                //       // const QuiltedGridTile(1, 2),
                 //     ],
                 //   ),
                 //   childrenDelegate: SliverChildBuilderDelegate(
-                //     (context, index) => Tile(index: index),
+                //     childCount: (snapshot.data!).docs.length,
+                //     (context, index) => Image.network(snapshot.data!.docs[index]['postUrl'],
+                //     fit: BoxFit.cover,),
                 //   ),
                 // );
                 
@@ -108,13 +110,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   crossAxisCount: 3,
                   itemCount: (snapshot.data! as dynamic).docs.length,
                   itemBuilder: (context, index) =>
-                      Image.network(snapshot.data!.docs[index]['postUrl']),
+                      Image.network(snapshot.data!.docs[index]['postUrl'], fit: BoxFit.cover,),
                   staggeredTileBuilder: (int index) => StaggeredTile.count(
                     index % 7 == 0 ? 2 : 1,
                     index % 7 == 0 ? 2 : 1,
                   ),
                   mainAxisSpacing: 8,
-                  crossAxisSpacing: 2.5,
+                  crossAxisSpacing: 8,
                 );
               },
             ),
